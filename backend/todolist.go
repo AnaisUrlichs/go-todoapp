@@ -2,6 +2,7 @@ package main
 
 import (
 	"io"
+	"os"
 	"net/http"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
@@ -11,9 +12,10 @@ import (
 	"encoding/json"
 	"strconv"
 	"github.com/rs/cors"
+	"github.com/AnaisUrlichs/go-todoapp/backend/util"
 )
 
-var db, _ = gorm.Open("mysql", "root:root@/todolist?charset=utf8&parseTime=True&loc=Local")
+var db, _ = gorm.Open("mysql", config.username + ":" + config.password + "@" + config.host + "/" + config.name + "?charset=utf8&parseTime=True&loc=Local")
 
 func UpdateItem(w http.ResponseWriter, r *http.Request) {
 	// Get URL parameter from mux
@@ -110,11 +112,29 @@ func Healthz(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
+	var config, err = util.LoadConfig(".")
 	log.SetFormatter(&log.TextFormatter{})
 	log.SetReportCaller(true)
 }
 
 func main() {
+    if err != nil {
+        log.Fatal("cannot load config:", err)
+    }
+
+    conn, err := sql.Open(config.DBDriver, config.DBSource)
+    if err != nil {
+        log.Fatal("cannot connect to db:", err)
+    }
+
+    store := db.NewStore(conn)
+    server := api.NewServer(store)
+
+    err = server.Start(config.ServerAddress)
+    if err != nil {
+        log.Fatal("cannot start server:", err)
+    }
+	
 	defer db.Close()
 
 	db.Debug().DropTableIfExists(&TodoItemModel{})
