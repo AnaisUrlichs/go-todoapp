@@ -2,7 +2,7 @@ package main
 
 import (
 	"io"
-	"os"
+	"fmt"
 	"net/http"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
@@ -11,11 +11,13 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"encoding/json"
 	"strconv"
-	"github.com/rs/cors"
 	"github.com/AnaisUrlichs/go-todoapp/backend/util"
+	//"github.com/rs/cors"
 )
 
-var db, _ = gorm.Open("mysql", config.username + ":" + config.password + "@" + config.host + "/" + config.name + "?charset=utf8&parseTime=True&loc=Local")
+//var config, err = util.LoadConfig(".")
+
+var db, _= gorm.Open("mysql", "")
 
 func UpdateItem(w http.ResponseWriter, r *http.Request) {
 	// Get URL parameter from mux
@@ -112,46 +114,34 @@ func Healthz(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	var config, err = util.LoadConfig(".")
 	log.SetFormatter(&log.TextFormatter{})
 	log.SetReportCaller(true)
 }
 
 func main() {
-    if err != nil {
-        log.Fatal("cannot load config:", err)
-    }
+	//var db, _ = gorm.Open("mysql", config.userna + ":" + config.password + "@" + config.host + "/" + config.name + "?charset=utf8&parseTime=True&loc=Local")
 
-    conn, err := sql.Open(config.DBDriver, config.DBSource)
-    if err != nil {
-        log.Fatal("cannot connect to db:", err)
-    }
-
-    store := db.NewStore(conn)
-    server := api.NewServer(store)
-
-    err = server.Start(config.ServerAddress)
-    if err != nil {
-        log.Fatal("cannot start server:", err)
-    }
+	config, err := util.LoadConfig(".")
 	
-	defer db.Close()
+	fmt.Println(config.Name)
 
-	db.Debug().DropTableIfExists(&TodoItemModel{})
-    db.Debug().AutoMigrate(&TodoItemModel{})
+	// defer db.Close()
 
-	log.Info("Starting todo list API server")
-	router := mux.NewRouter()
-	router.HandleFunc("/healthz", Healthz).Methods("GET")
-	router.HandleFunc("/todo-completed", GetCompletedItems).Methods("GET")
-	router.HandleFunc("/todo-incomplete", GetIncompleteItems).Methods("GET")
-	router.HandleFunc("/todo", CreateItem).Methods("POST")
-	router.HandleFunc("/todo/{id}", UpdateItem).Methods("POST")
-	router.HandleFunc("/todo/{id}", DeleteItem).Methods("DELETE")
+	// db.Debug().DropTableIfExists(&TodoItemModel{})
+    // db.Debug().AutoMigrate(&TodoItemModel{})
+
+	// log.Info("Starting todo list API server")
+	// router := mux.NewRouter()
+	// router.HandleFunc("/healthz", Healthz).Methods("GET")
+	// router.HandleFunc("/todo-completed", GetCompletedItems).Methods("GET")
+	// router.HandleFunc("/todo-incomplete", GetIncompleteItems).Methods("GET")
+	// router.HandleFunc("/todo", CreateItem).Methods("POST")
+	// router.HandleFunc("/todo/{id}", UpdateItem).Methods("POST")
+	// router.HandleFunc("/todo/{id}", DeleteItem).Methods("DELETE")
 	
-	handler := cors.New(cors.Options{
-		AllowedMethods: []string{"GET", "POST", "DELETE", "PATCH", "OPTIONS"},
-	}).Handler(router)
+	// handler := cors.New(cors.Options{
+	// 	AllowedMethods: []string{"GET", "POST", "DELETE", "PATCH", "OPTIONS"},
+	// }).Handler(router)
 
-	http.ListenAndServe(":8000", handler)
+	// http.ListenAndServe(":8000", handler)
 }

@@ -3,10 +3,10 @@ package util
 import ( "github.com/spf13/viper" )
 
 type Config struct {
-    username      string `mapstructure:"username"`
-    password      string `mapstructure:"password"`
-	host      	  string `mapstructure:"host"`
-    name          string `mapstructure:"name"`
+    Username      string `mapstructure:"username"`
+    Password      string `mapstructure:"password"`
+	Host      	  string `mapstructure:"host"`
+    Name          string `mapstructure:"name"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
