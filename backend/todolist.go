@@ -121,9 +121,8 @@ func init() {
 func main() {
 	//var db, _ = gorm.Open("mysql", config.userna + ":" + config.password + "@" + config.host + "/" + config.name + "?charset=utf8&parseTime=True&loc=Local")
 
-	config, err := util.LoadConfig(".")
+	// config, err := util.LoadConfig(".")
 	
-	fmt.Println(config.Name)
 
 	// defer db.Close()
 

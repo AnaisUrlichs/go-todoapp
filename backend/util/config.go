@@ -3,14 +3,14 @@ package util
 import ( "github.com/spf13/viper" )
 
 type Config struct {
-    Username      string `mapstructure:"username"`
-    Password      string `mapstructure:"password"`
-	Host      	  string `mapstructure:"host"`
-    Name          string `mapstructure:"name"`
+    Username      string `mapstructure:"USERNAME"`
+    Password      string `mapstructure:"PASSWORD"`
+	Host      	  string `mapstructure:"HOST"`
+    Name          string `mapstructure:"NAME"`
 }
 
-func LoadConfig(path string) (config Config, err error) {
-    viper.AddConfigPath(path)
+func LoadConfig() (config Config, err error) {
+    viper.AddConfigPath(".")
     viper.SetConfigName("app")
     viper.SetConfigType("env")
 

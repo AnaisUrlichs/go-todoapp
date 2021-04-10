@@ -3,6 +3,7 @@ module github.com/AnaisUrlichs/go-todoapp
 go 1.16
 
 require (
+	github.com/AnaisUrlichs/go-todoapp/backend/util v0.0.0-20210409184706-259d65f517bb // indirect
 	github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
