@@ -2,22 +2,24 @@ package main
 
 import (
 	"io"
-	"fmt"
 	"net/http"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"encoding/json"
 	"strconv"
+	"github.com/rs/cors"
+	"github.com/jinzhu/gorm"
 	"github.com/AnaisUrlichs/go-todoapp/backend/util"
-	//"github.com/rs/cors"
 )
 
-//var config, err = util.LoadConfig(".")
+var db, _ = gorm.Open("mysql", util.Username + ":" + util.Password + "@" + util.Host + "/" + util.Name + "?charset=utf8&parseTime=True&loc=Local")
 
-var db, _= gorm.Open("mysql", "")
+func init() {
+	log.SetFormatter(&log.TextFormatter{})
+	log.SetReportCaller(true)
+}
 
 func UpdateItem(w http.ResponseWriter, r *http.Request) {
 	// Get URL parameter from mux
@@ -113,34 +115,22 @@ func Healthz(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, `{"alive": true`)
 }
 
-func init() {
-	log.SetFormatter(&log.TextFormatter{})
-	log.SetReportCaller(true)
-}
-
 func main() {
-	//var db, _ = gorm.Open("mysql", config.userna + ":" + config.password + "@" + config.host + "/" + config.name + "?charset=utf8&parseTime=True&loc=Local")
+	db.Debug().DropTableIfExists(&TodoItemModel{})
+    db.Debug().AutoMigrate(&TodoItemModel{})
 
-	// config, err := util.LoadConfig(".")
+	log.Info("Starting todo list API server")
+	router := mux.NewRouter()
+	router.HandleFunc("/healthz", Healthz).Methods("GET")
+	router.HandleFunc("/todo-completed", GetCompletedItems).Methods("GET")
+	router.HandleFunc("/todo-incomplete", GetIncompleteItems).Methods("GET")
+	router.HandleFunc("/todo", CreateItem).Methods("POST")
+	router.HandleFunc("/todo/{id}", UpdateItem).Methods("POST")
+	router.HandleFunc("/todo/{id}", DeleteItem).Methods("DELETE")
 	
+	handler := cors.New(cors.Options{
+		AllowedMethods: []string{"GET", "POST", "DELETE", "PATCH", "OPTIONS"},
+	}).Handler(router)
 
-	// defer db.Close()
-
-	// db.Debug().DropTableIfExists(&TodoItemModel{})
-    // db.Debug().AutoMigrate(&TodoItemModel{})
-
-	// log.Info("Starting todo list API server")
-	// router := mux.NewRouter()
-	// router.HandleFunc("/healthz", Healthz).Methods("GET")
-	// router.HandleFunc("/todo-completed", GetCompletedItems).Methods("GET")
-	// router.HandleFunc("/todo-incomplete", GetIncompleteItems).Methods("GET")
-	// router.HandleFunc("/todo", CreateItem).Methods("POST")
-	// router.HandleFunc("/todo/{id}", UpdateItem).Methods("POST")
-	// router.HandleFunc("/todo/{id}", DeleteItem).Methods("DELETE")
-	
-	// handler := cors.New(cors.Options{
-	// 	AllowedMethods: []string{"GET", "POST", "DELETE", "PATCH", "OPTIONS"},
-	// }).Handler(router)
-
-	// http.ListenAndServe(":8000", handler)
+	http.ListenAndServe(":8000", handler)
 }

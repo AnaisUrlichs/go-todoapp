@@ -1,27 +1,25 @@
 package util
 
-import ( "github.com/spf13/viper" )
+import (
+	"os"
+)
 
-type Config struct {
-    Username      string `mapstructure:"USERNAME"`
-    Password      string `mapstructure:"PASSWORD"`
-	Host      	  string `mapstructure:"HOST"`
-    Name          string `mapstructure:"NAME"`
+func Username() string {
+	value := os.Getenv("username")
+	return value
 }
 
-func LoadConfig() (config Config, err error) {
-    viper.AddConfigPath(".")
-    viper.SetConfigName("app")
-    viper.SetConfigType("env")
-
-    viper.AutomaticEnv()
-
-    err = viper.ReadInConfig()
-    if err != nil {
-        return
-    }
-
-    err = viper.Unmarshal(&config)
-    return
+func Password() string {
+	value := os.Getenv("password")
+	return value
 }
 
+func Host() string {
+	value := os.Getenv("host")
+	return value
+}
+
+func Name() string {
+	value := os.Getenv("name")
+	return value
+}
