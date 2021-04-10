@@ -1,4 +1,4 @@
-module github.com/AnaisUrlichs/go-todoapp
+module github.com/AnaisUrlichs/go-todoapp/backend
 
 go 1.16
 
@@ -9,7 +9,7 @@ require (
 	github.com/jinzhu/now v1.1.2 // indirect
 	github.com/rs/cors v1.7.0
 	github.com/sirupsen/logrus v1.8.1
-	github.com/stretchr/testify v1.4.0 // indirect
+	github.com/stretchr/testify v1.7.0 // indirect
 	golang.org/x/sys v0.0.0-20210403161142-5e06dd20ab57 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

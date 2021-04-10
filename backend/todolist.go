@@ -11,9 +11,10 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
+	env "github.com/AnaisUrlichs/go-todoapp/backend/env"
 )
 
-var db, _ = gorm.Open("mysql", env.Username+":"+env.Password+"@"+env.Host+"/"+env.Name+"?charset=utf8&parseTime=True&loc=Local")
+var db, _ = gorm.Open("mysql", env.Username() + ":" + env.Password() +"@tcp("+env.Host()+":3306)/"+env.Name()+"?charset=utf8&parseTime=True&loc=Local")
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{})
@@ -115,6 +116,8 @@ func Healthz(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	defer db.Close()
+
 	db.Debug().DropTableIfExists(&TodoItemModel{})
 	db.Debug().AutoMigrate(&TodoItemModel{})
 

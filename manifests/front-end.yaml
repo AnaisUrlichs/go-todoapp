@@ -9,7 +9,7 @@ spec:
   ports:
   - protocol: "TCP"
     port: 80
-    targetPort: 8080
+    targetPort: 80
   type: LoadBalancer # use NodePort if you are not running Kubernetes on Cloud
 ---
 # 'Deployment' to manage of configuration of frontEnd Deployment
@@ -42,4 +42,4 @@ spec:
                  name: backend-conf # Name of configMap
                  key: server-uri
         ports:
-        - containerPort: 8080
+        - containerPort: 80

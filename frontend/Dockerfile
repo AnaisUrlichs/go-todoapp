@@ -16,7 +16,7 @@ FROM nginx:1.19-alpine
 COPY --from=build-deps /usr/src/app /usr/share/nginx/html
 
 # expose port 80 to the outer world
-EXPOSE 8080
+EXPOSE 80
 
 # start nginx 
 CMD ["nginx", "-g", "daemon off;"]
