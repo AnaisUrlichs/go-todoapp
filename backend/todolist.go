@@ -11,10 +11,9 @@ import (
 	"strconv"
 	"github.com/rs/cors"
 	"github.com/jinzhu/gorm"
-	"github.com/AnaisUrlichs/go-todoapp/backend/util"
 )
 
-var db, _ = gorm.Open("mysql", util.Username + ":" + util.Password + "@" + util.Host + "/" + util.Name + "?charset=utf8&parseTime=True&loc=Local")
+var db, _ = gorm.Open("mysql", env.Username + ":" + env.Password + "@" + env.Host + "/" + env.Name + "?charset=utf8&parseTime=True&loc=Local")
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{})
