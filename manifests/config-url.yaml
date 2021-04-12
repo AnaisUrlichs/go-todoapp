@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: backend-conf
 data:
-  server-uri: 40.76.169.209:8000
+  server-uri: <set-url>
