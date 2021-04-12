@@ -1,19 +1,17 @@
-# Define 'Service' to expose backend application deployment
 apiVersion: v1
 kind: Service
 metadata:
   name: to-do-app-backend  
 spec:
-  selector:  # backend application pod lables should match these
+  selector:
     app: to-do-app
     tier: backend
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 8080
-  type: LoadBalancer   # use NodePort, if you are not running Kubernetes on cloud
+    targetPort: 8000
+  type: LoadBalancer 
 ---
-# Configure 'Deployment' of backend application
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,40 +20,40 @@ metadata:
     app: to-do-app
     tier: backend
 spec:
-  replicas: 2    # Number of replicas of back-end application to be deployed
+  replicas: 2
   selector:
-    matchLabels: # backend application pod labels should match these
+    matchLabels:
       app: to-do-app
       tier: backend
   template:
     metadata:
-      labels: # Must macth 'Service' and 'Deployment' labels
+      labels: 
         app: to-do-app
         tier: backend  
     spec:                 
       containers: 
       - name: to-do-app-backend 
-        image: kubernetesdemo/to-do-app-backend   # docker image of backend application
+        image: anaisurlichs/go-todo-backend:1.0
         env:
-          - name: DB_HOST
+          - name: host
             valueFrom: 
               configMapKeyRef:
                 name: db-conf
                 key: host
-          - name: DB_NAME  # Setting Database name from configMap
+          - name: name
             valueFrom:
               configMapKeyRef:
                 name: db-conf 
                 key: name
-          - name: DB_USERNAME  # Setting Database username from Secret
+          - name: username 
             valueFrom:
               secretKeyRef:
-                name: db-credentials # Secret Name
+                name: db-credentials
                 key: username
-          - name: DB_PASSWORD # Setting Database password from Secret
+          - name: password 
             valueFrom:
               secretKeyRef:
                 name: db-credentials
                 key: password     
         ports:
-        - containerPort: 8080
+        - containerPort: 8000

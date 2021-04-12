@@ -34,7 +34,7 @@ spec:
     spec:                 
       containers: 
       - name: to-do-app-frontend 
-        image: anaisurlichs/go-todo-front-end:1.0  # docker image of frontend application
+        image: anaisurlichs/go-todo-front-end:2.0  # docker image of frontend application
         env: # Setting Environmental Variables
           -  name: SERVER_URI # Setting Backend URI from configMap
              valueFrom:

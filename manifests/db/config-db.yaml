@@ -4,4 +4,4 @@ metadata:
   name: db-conf
 data:
   host: mysql
-  name: to-do-app.db
+  name: todolist
