@@ -12,7 +12,7 @@ spec:
   selector:
     app: mysql
     tier: database
-  type: ClusterIP 
+  clusterIP: None
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
