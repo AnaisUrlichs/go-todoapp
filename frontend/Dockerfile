@@ -1,5 +1,5 @@
 # Pull official base image
-FROM alpine as build-deps
+FROM alpine:3.13 as build-deps
 
 # A directory within the virtualized Docker environment
 # Becomes more relevant when using Docker Compose later
